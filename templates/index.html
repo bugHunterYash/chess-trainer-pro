@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human Chess Practice Trainer - Good Move Calculator</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="logo-icon">♞</div>
+                <div>
+                    <h1>Human Move Calculator & Trainer</h1>
+                    <p class="subtitle">Self-practice with realistic human moves — not superhuman Stockfish</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="level-badge" id="currentLevelBadge">Rating: 1500</div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <div class="main-layout">
+            <!-- Left: Chessboard Column -->
+            <div class="board-column">
+                <div class="board-wrapper">
+                    <!-- Vertical Eval Bar -->
+                    <div class="eval-bar-container" title="Position Evaluation">
+                        <div class="eval-bar-fill" id="evalBarFill" style="height: 50%;"></div>
+                        <span class="eval-bar-text" id="evalBarText">0.0</span>
+                    </div>
+
+                    <!-- Chessboard Area -->
+                    <div class="board-container" id="boardContainer">
+                        <div id="chessboard" class="chessboard"></div>
+                        <!-- SVG Overlay for Move Arrows -->
+                        <svg id="arrowOverlay" class="arrow-overlay" viewBox="0 0 100 100"></svg>
+                    </div>
+                </div>
+
+                <!-- Board Controls -->
+                <div class="board-controls">
+                    <button class="btn btn-secondary" id="btnFlip" title="Flip Board">🔄 Flip</button>
+                    <button class="btn btn-secondary" id="btnTakeback" title="Takeback Move">↩ Undo</button>
+                    <button class="btn btn-secondary" id="btnReset" title="Reset to Start">⏹ Reset</button>
+                    <button class="btn btn-primary" id="btnSuggest">💡 Suggest Good Move</button>
+                    <button class="btn btn-accent" id="btnPlayBot">🤖 AI Play Move</button>
+                </div>
+
+                <!-- FEN Input Bar -->
+                <div class="fen-box">
+                    <input type="text" id="fenInput" placeholder="Enter or paste FEN position...">
+                    <button class="btn btn-sm" id="btnLoadFen">Load</button>
+                    <button class="btn btn-sm btn-outline" id="btnCopyFen">Copy</button>
+                </div>
+            </div>
+
+            <!-- Right: Training Controls & Analysis Column -->
+            <div class="analysis-column">
+                <!-- Human Level Selector Card -->
+                <div class="card level-card">
+                    <div class="card-header">
+                        <h3>Human Skill Level</h3>
+                        <span class="info-pill" id="levelNamePill">Intermediate (1500)</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="level-buttons">
+                            {% for lvl in levels %}
+                            <button class="btn-level {% if lvl == 1500 %}active{% endif %}" data-level="{{ lvl }}">
+                                {{ lvl }}
+                            </button>
+                            {% endfor %}
+                        </div>
+                        <p class="level-description" id="levelDesc">
+                            {{ level_info[1500].desc }}
+                        </p>
+
+                        <!-- Suggestion Filter Mode -->
+                        <div class="mode-toggle">
+                            <label class="toggle-container">
+                                <input type="checkbox" id="goodMoveFilter" checked>
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-label">Filter out blunders (Ensure sound, good move)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Move Suggestion Card -->
+                <div class="card suggestion-card" id="suggestionCard">
+                    <div class="card-header">
+                        <h3>Move Suggestion</h3>
+                        <span class="status-tag" id="suggestTag">Ready</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="suggestion-hero" id="suggestHero">
+                            <div class="move-main" id="suggestMoveSan">—</div>
+                            <div class="move-stats">
+                                <div class="stat-pill" id="statPopularity">Popularity: —</div>
+                                <div class="stat-pill" id="statEval">Eval: —</div>
+                            </div>
+                        </div>
+
+                        <div class="explanation-box" id="explanationBox">
+                            <p class="concept-text" id="conceptText">Click <strong>Suggest Good Move</strong> or make a move on the board to calculate realistic human recommendations.</p>
+                            <p class="advice-text" id="adviceText"></p>
+                        </div>
+
+                        <!-- Engine Comparison Box -->
+                        <div class="engine-compare-box" id="engineCompareBox" style="display: none;">
+                            <div class="compare-header">
+                                <span class="engine-badge">⚡ Stockfish Comparison</span>
+                                <span class="engine-eval" id="engineEval">—</span>
+                            </div>
+                            <p class="engine-move-text">Engine best: <strong id="engineMoveSan">—</strong></p>
+                            <p class="engine-why-text" id="engineWhyText"></p>
+                        </div>
+
+                        <!-- Top Candidates List -->
+                        <div class="candidates-section" id="candidatesSection" style="display: none;">
+                            <h4>Top Human Candidate Moves:</h4>
+                            <div class="candidates-list" id="candidatesList"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Game Moves History -->
+                <div class="card history-card">
+                    <div class="card-header">
+                        <h3>Move History</h3>
+                        <span class="move-count" id="moveCount">0 moves</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="moves-list" id="movesList">
+                            <span class="placeholder-text">Moves will appear here...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Piece SVGs and scripts -->
+    <script src="/static/app.js"></script>
+</body>
+</html>
+

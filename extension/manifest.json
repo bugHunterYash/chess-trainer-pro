@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Lichess Instant Sync Bridge",
+  "version": "1.0.0",
+  "description": "Zero-latency real-time move sync bridge between Lichess and Chess Trainer Pro",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "*://*.lichess.org/*",
+    "http://127.0.0.1:3000/*",
+    "http://localhost:3000/*",
+    "*://*.vercel.app/*",
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Chess Trainer Sync"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.lichess.org/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

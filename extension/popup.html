@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 270px;
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 14px;
+      background: #0f172a;
+      color: #f8fafc;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #064e3b;
+      color: #6ee7b7;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+    }
+    h2 {
+      font-size: 14px;
+      margin: 0 0 4px;
+    }
+    p {
+      font-size: 11px;
+      color: #94a3b8;
+      margin: 0 0 10px;
+      line-height: 1.4;
+    }
+    label {
+      font-size: 10px;
+      font-weight: 600;
+      color: #cbd5e1;
+      display: block;
+      margin-bottom: 4px;
+    }
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 6px 8px;
+      font-family: monospace;
+      font-size: 11px;
+      color: #38bdf8;
+      margin-bottom: 8px;
+    }
+    input:focus {
+      outline: none;
+      border-color: #10b981;
+    }
+    .btn-row {
+      display: flex;
+      gap: 6px;
+    }
+    button {
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.2s;
+    }
+    .btn-save {
+      background: #10b981;
+      color: #022c22;
+    }
+    .btn-local {
+      background: #334155;
+      color: #f1f5f9;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .status {
+      font-size: 10px;
+      color: #10b981;
+      margin-top: 6px;
+      text-align: center;
+      min-height: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="badge">
+    <div class="dot"></div> Bridge Ready ⚡
+  </div>
+  <h2>Chess Trainer Pro</h2>
+  <p>Automatic 0ms live move sync for active Lichess games.</p>
+
+  <label for="trainerUrl">Target Trainer Server:</label>
+  <input type="text" id="trainerUrl" placeholder="http://127.0.0.1:3000" />
+
+  <div class="btn-row">
+    <button class="btn-local" id="setLocalBtn">Local (3000)</button>
+    <button class="btn-save" id="saveBtn">Save URL</button>
+  </div>
+  <div class="status" id="statusMsg"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
